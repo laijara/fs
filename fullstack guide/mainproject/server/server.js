@@ -31,3 +31,10 @@ app.get('/orders', async (req, res) => {
         res.status(500).json({ error: 'Ошибка сервера' });
     }
 });
+
+app.post('/orders', async (req, res) => {
+    const { name, description } = req.body;
+    const query = 'INSERT INTO orders (order_name, order_description) VALUES ($1, $2, $3) RETURNING *';
+    const result = await pool.query(query, [name, description]);
+    res.status(201).json(result.rows[0]);
+});
